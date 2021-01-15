@@ -1,0 +1,18 @@
+{
+  "name": "io.github.borrit",
+  "displayName": "Borrit",
+  "version": "0.1.0-preview.1",
+  "unity": "2019.4",
+  "description": "Replace this string with your own description of the package. This description appears in the Package Manager window when the user selects this package from the list. \n\nFor best results, use this text to summarize: \n\u25aa What the package does \n\u25aa How it can benefit the user \n\nNote: Special formatting characters are supported, including line breaks ('\\n') and bullets ('\\u25AA').",
+  "author": {
+    "name": "Romain Théry"
+  },
+  "dependencies": {
+    "com.unity.editorcoroutines": "1.0.0",
+    "com.unity.settings-manager": "1.0.3"
+  },
+  "repository": {
+    "url": "https://github.com/rthery/borrit.git",
+    "type": "git"
+  }
+}
