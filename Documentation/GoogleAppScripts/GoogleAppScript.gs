@@ -18,7 +18,7 @@ function doPost(request)
     data = JSON.parse(data);
     return buildResponse({Success: true, Error: "", BorrowedEntries: data }, lock);
   }
-  else if(command.Operation == "borrow")
+  if(command.Operation == "borrow")
   {
     if(command.BorrowedEntries == undefined)
     {
@@ -28,7 +28,7 @@ function doPost(request)
     updateCache(loadRows());
     return buildResponse({Success: true, Error: ""}, lock);
   }
-  else if(command.Operation == "return")
+  if(command.Operation == "return")
   {
     if(command.ReturnedGuids == undefined)
     {
