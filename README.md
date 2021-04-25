@@ -33,7 +33,11 @@ In addition to this, you will need to input the [spreadsheet id](https://develop
 and make sure there's a sheet in it with the name of your project ([Application.productName](https://docs.unity3d.com/ScriptReference/Application-productName.html))
 
 ### Google App Script
-For the Google App Script database, you will need to go to Google Drive, create a google spreadsheet, then create a Google App Script document and paste inside the content of this script: [GoogleAppScript.gs](Documentation/GoogleAppScripts/GoogleAppScript.gs) replace the #Your spreadsheet id goes here# test on the top of the script with your spreadsheet id(you can find on the url bar between the /d/ and the /edit parts), save the document. On the top right corner of the document there is a big blue button to deploy the script. Deploy it as a Web App. Copy the Web app URL that appears on the screen. In the Unity project, go to Edit > Project Settings > Borrit then paste the URL in the Script URL field.
+If the project has already been set up you can skip this step and just input the script url.
+
+For the Google App Script database, you will need to go to Google Drive, create a google spreadsheet, then create a Google App Script document and paste inside the content of this script: [GoogleAppScript.gs](Documentation/GoogleAppScripts/GoogleAppScript.gs) replace the #Your spreadsheet id goes here# test on the top of the script with your spreadsheet id(you can find on the url bar between the /d/ and the /edit parts), save the document. On the top right corner of the document there is a big blue button to deploy the script. Deploy it as a Web App. Copy the Web app URL that appears on the screen. 
+
+In the Unity project, go to Edit > Project Settings > Borrit then paste the URL in the Script URL field.
 
 ## Usage example
 
