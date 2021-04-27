@@ -11,6 +11,7 @@ namespace BorritEditor.Database.GoogleAppScript
         public IDatabaseSettings Settings { get; private set; }
 
         public event EventHandler<bool> OnInitialized;
+        public event EventHandler OnUpdated;
         
         private InternalDataBase _data = new InternalDataBase();
         private bool _refreshing = false;
@@ -98,6 +99,8 @@ namespace BorritEditor.Database.GoogleAppScript
             _data.Clear();
             _data.Borrow(response.BorrowedEntries);
             _data.Commit();
+            
+            OnUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnUpdateResponse(string responseRaw)
@@ -112,6 +115,8 @@ namespace BorritEditor.Database.GoogleAppScript
                 return;
             }
             _data.Commit();
+            
+            OnUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         public DatabaseRow GetBorrowedAssetData(string guid)

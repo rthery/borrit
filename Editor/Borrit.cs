@@ -45,6 +45,7 @@ namespace BorritEditor
             if (_database != null)
             {
                 _database.OnInitialized -= OnDatabaseInitialized;
+                _database.OnUpdated -= OnDatabaseUpdated;
                 _database.Reset();
                 _database = null;
             }
@@ -55,10 +56,18 @@ namespace BorritEditor
             if (success)
             {
                 _database.OnInitialized -= OnDatabaseInitialized;
+                _database.OnUpdated += OnDatabaseUpdated;
                 EditorApplication.projectWindowItemOnGUI += OnProjectWindowItemOnGUI;
 
                 EditorCoroutineUtility.StartCoroutineOwnerless(RefreshDatabaseCoroutine());
             }
+        }
+
+        private static void OnDatabaseUpdated(object sender, EventArgs e)
+        {
+            // We have to do it twice, otherwise it doesn't always trigger EditorApplication.projectWindowItemOnGUI...
+            EditorApplication.RepaintProjectWindow();
+            EditorApplication.RepaintProjectWindow();
         }
         
         private static IEnumerator RefreshDatabaseCoroutine()

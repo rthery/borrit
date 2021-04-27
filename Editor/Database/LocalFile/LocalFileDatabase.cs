@@ -8,6 +8,9 @@ namespace BorritEditor.Database.LocalFile
         public bool IsInitialized { get; private set; }
         
         public IDatabaseSettings Settings { get; private set; }
+        
+        public event EventHandler<bool> OnInitialized;
+        public event EventHandler OnUpdated;
 
         public void Initialize(string borrowerName, string projectName)
         {
@@ -29,11 +32,15 @@ namespace BorritEditor.Database.LocalFile
 
         public void BorrowAssets(string[] guids, string borrowerName)
         {
+            OnUpdated?.Invoke(this, EventArgs.Empty);
+
             throw new NotImplementedException();
         }
 
         public void ReturnAssets(string[] guids)
         {
+            OnUpdated?.Invoke(this, EventArgs.Empty);
+            
             throw new NotImplementedException();
         }
 
@@ -51,7 +58,5 @@ namespace BorritEditor.Database.LocalFile
         {
             return false;
         }
-
-        public event EventHandler<bool> OnInitialized;
     }
 }

@@ -52,6 +52,7 @@ namespace BorritEditor.Database.GoogleSheets
 		}
 
 		public event EventHandler<bool> OnInitialized;
+		public event EventHandler OnUpdated;
 
 		public void Initialize(string borrowerName, string projectName)
 		{
@@ -120,6 +121,8 @@ namespace BorritEditor.Database.GoogleSheets
 			request.Execute();
 			
 			_data.AddRange(dataList);
+			
+			OnUpdated?.Invoke(this, EventArgs.Empty);
 		}
 		
 		public void ReturnAssets(string[] guids)
@@ -166,6 +169,8 @@ namespace BorritEditor.Database.GoogleSheets
 			request.Execute();
 			
 			_data = dataList;
+			
+			OnUpdated?.Invoke(this, EventArgs.Empty);
 		}
 
 		public void Refresh()

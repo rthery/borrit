@@ -8,6 +8,7 @@ namespace BorritEditor.Database
 		IDatabaseSettings Settings { get; }
 		
 		event EventHandler<bool> OnInitialized;
+		event EventHandler OnUpdated;
 
 		void Initialize(string borrowerName, string projectName);
 		void Reset();
