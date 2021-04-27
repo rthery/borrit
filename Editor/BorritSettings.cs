@@ -44,7 +44,7 @@ namespace BorritEditor
         [UserSetting("General", "Username")]
         private static UserSetting<string> _userName = new UserSetting<string>(BorritSettings.Instance, Keys.Username, string.Empty, SettingsScope.User);
 
-        private static UserSetting<string> _database = new UserSetting<string>(BorritSettings.Instance, Keys.SelectedDatabase, "Google Sheets", SettingsScope.Project);
+        private static UserSetting<string> _database = new UserSetting<string>(BorritSettings.Instance, Keys.SelectedDatabase, "Google App Script", SettingsScope.Project);
         private static UserSetting<int> _databaseRefreshInterval = new UserSetting<int>(BorritSettings.Instance, Keys.DatabaseRefreshInterval, 10, SettingsScope.User);
         
         [UserSettingBlock("General")]
