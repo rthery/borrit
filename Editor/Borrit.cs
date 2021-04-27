@@ -80,14 +80,14 @@ namespace BorritEditor
             }
         }
 
-        [MenuItem("Assets/Borrit/Borrow", priority = 1984)]
+        [MenuItem("Assets/Borrit/Borrow #&b", priority = 1984)]
         private static void BorrowAsset()
         {
             string username = BorritSettings.Instance.Get<string>(BorritSettings.Keys.Username, SettingsScope.User);
             _database.BorrowAssets(Selection.assetGUIDs, username);
         }
         
-        [MenuItem("Assets/Borrit/Borrow", true)]
+        [MenuItem("Assets/Borrit/Borrow #&b", true)]
         private static bool BorrowAssetValidate()
         {
             if (_database == null)
@@ -125,13 +125,13 @@ namespace BorritEditor
             return true;
         }
         
-        [MenuItem("Assets/Borrit/Return", priority = 1984)]
+        [MenuItem("Assets/Borrit/Return #&r", priority = 1984)]
         private static void ReturnAsset()
         {
             _database.ReturnAssets(Selection.assetGUIDs);
         }
 
-        [MenuItem("Assets/Borrit/Return", true)]
+        [MenuItem("Assets/Borrit/Return #&r", true)]
         private static bool ReturnAssetValidate()
         {
             if (_database == null)
