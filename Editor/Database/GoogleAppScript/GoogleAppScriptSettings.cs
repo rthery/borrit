@@ -11,6 +11,7 @@ namespace BorritEditor.Database.GoogleAppScript
         public void OnGUI(string searchContext)
         {
             EditorGUILayout.LabelField("Google Sheets", EditorStyles.boldLabel);
+            EditorGUI.BeginChangeCheck();
             _url.value = SettingsGUILayout.SettingsTextField("Script URL", _url, searchContext);
             
             HasBeenModified = EditorGUI.EndChangeCheck();
