@@ -18,26 +18,51 @@ databases to store the state of the borrowed assets.
 Use the package manager in Unity to install this package from git.
 
 ### Google Spreadsheets
-For the Google Sheets Database, you will need a bit of setup. Follow 
-the instructions [here](https://developers.google.com/sheets/api/guides/authorizing) to create
-an application that will allow you to access Google Sheets. Then download the OAuth 2.0 credentials
-JSON file you'll obtained through Google Cloud Console.
+#### Project Setup
+For the Google Sheets Database, you will need a bit of setup.
+1. Go to Google Drive and create a Spreadsheet with at least one sheet sheet in it with the name of your project
+   ([Application.productName](https://docs.unity3d.com/ScriptReference/Application-productName.html))
+2. Share as Editor with Google accounts who will use Borrit
+3. Follow the instructions [here](https://developers.google.com/sheets/api/guides/authorizing) to create
+   an application that will allow you to access Google Sheets.
+4. Download the OAuth 2.0 credentials JSON file you'll obtained through Google Cloud Console.
+5. Place this file somewhere in your project (it needs to be shared with your team, so push it
+   to your remote repository), a good place would be in `ProjectSettings\Packages\io.github.borrit`
+   beside the other settings of Borrit, if your repository is not public
+6. In Unity, Open Borrit settings, Edit > Project Settings > Borrit
+7. Select 'Google Sheets' Database
+8. Select the credentials.json file in the Credentials field
+9. Input the [spreadsheet id](https://developers.google.com/sheets/api/guides/concepts#spreadsheet_id)
 
-Then place this file somewhere in your project (it needs to be shared with your team, so push it 
-to your remote repository), a good place would be in `ProjectSettings\Packages\io.github.borrit`
-beside the other settings of Borrit.
-
-You should now be able to select that file in Edit > Project Settings > Borrit then create your 
-authentication token (don't forget to set your username before!).
-In addition to this, you will need to input the [spreadsheet id](https://developers.google.com/sheets/api/guides/concepts#spreadsheet_id) 
-and make sure there's a sheet in it with the name of your project ([Application.productName](https://docs.unity3d.com/ScriptReference/Application-productName.html))
+#### User Setup
+Once the project is setup and credentials.json available somewhere
+1. Open Borrit settings, Edit > Project Settings > Borrit
+2. Select a username if it's empty
+3. Make sure Credentials file is present, otherwise select it
+4. Create your authentication token
+5. Connect and you should be ready to use Borrit
 
 ### Google App Script
-If the project has already been set up you can skip this step and just input the script url.
+This is a much easier method to use Google Sheets as a database, than the previous method.
 
-For the Google App Script database, you will need to go to Google Drive, create a google spreadsheet, then create a Google App Script document and paste inside the content of this script: [GoogleAppScript.gs](Documentation/GoogleAppScripts/GoogleAppScript.gs) replace the #Your spreadsheet id goes here# test on the top of the script with your spreadsheet id(you can find on the url bar between the /d/ and the /edit parts), save the document. On the top right corner of the document there is a big blue button to deploy the script. Deploy it as a Web App. Copy the Web app URL that appears on the screen. 
+#### Project Setup
+1. Go to Google Drive and create a Spreadsheet
+2. Create a Google App Script document, Tools > Script editor
+3. Paste the content of [GoogleAppScript.gs](Documentation/GoogleAppScripts/GoogleAppScript.gs)
+4. Replace the `#Your spreadsheet id goes here#` at the top of the script with your [spreadsheet id](https://developers.google.com/sheets/api/guides/concepts#spreadsheet_id)
+5. Save the script
+6. Press Deploy > New Deploy (top right corner of the page). Deploy it as a Web App. Copy the Web app URL that appears on the screen.
+7. Select type 'Web App' and select 'Anyone' for 'Who has access'
+8. Confirm deploy and copy the Web App URL displayed
+9. In Unity, Open Borrit settings, Edit > Project Settings > Borrit
+10. Select 'Google App Script' Database
+11. Paste the URL you just copied in the Script URL field
 
-In the Unity project, go to Edit > Project Settings > Borrit then paste the URL in the Script URL field.
+#### User Setup
+Once the project is setup
+1. Open Borrit settings, Edit > Project Settings > Borrit
+2. Select a username if it's empty
+3. Make sure to input the appropriate Script URL if it's empty
 
 ## Usage example
 
