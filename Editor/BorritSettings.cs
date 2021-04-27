@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using BorritEditor.Database;
+using BorritEditor.Database.GoogleAppScript;
 using UnityEditor;
 using UnityEditor.SettingsManagement;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace BorritEditor
 {
@@ -33,6 +36,8 @@ namespace BorritEditor
                 _databaseTypesByName.Add(ObjectNames.NicifyVariableName(databaseType.Name.Replace("Database", string.Empty)), databaseType);
             }
 
+            SetDefaultValues();
+
             UserSettingsProvider provider = new UserSettingsProvider("Project/Borrit",
                 Instance,
                 new [] { typeof(BorritSettings).Assembly },
@@ -40,12 +45,56 @@ namespace BorritEditor
             
             return provider;
         }
+
+        private static void SetDefaultValues()
+        {
+            if (_userName.value == string.Empty)
+            {
+                // We fetch git user.name if possible
+                var proc = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "git",
+                        Arguments = "config user.name",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                proc.Start();
+                proc.WaitForExit();
+                if (proc.ExitCode == 0)
+                {
+                    string lastLine = null;
+                    while (!proc.StandardOutput.EndOfStream)
+                    {
+                        lastLine = proc.StandardOutput.ReadLine();
+                    }
+
+                    _userName.value = lastLine;
+                }
+                else
+                {
+                    Debug.LogWarning($"[Borrit] Failed to find git user.name (ExitCode: {proc.ExitCode})");
+                    _userName.value = "toto";
+                }
+            }
+            
+            if (_database.value == string.Empty)
+            {
+                _database.value = ObjectNames.NicifyVariableName(nameof(GoogleAppScriptDatabase).Replace("Database", string.Empty));
+            }
+            
+            _settings.Save();
+        }
         
         [UserSetting("General", "Username")]
-        private static UserSetting<string> _userName = new UserSetting<string>(BorritSettings.Instance, Keys.Username, string.Empty, SettingsScope.User);
+        private static UserSetting<string> _userName = new UserSetting<string>(Instance, Keys.Username, string.Empty, SettingsScope.User);
 
-        private static UserSetting<string> _database = new UserSetting<string>(BorritSettings.Instance, Keys.SelectedDatabase, "Google App Script", SettingsScope.Project);
-        private static UserSetting<int> _databaseRefreshInterval = new UserSetting<int>(BorritSettings.Instance, Keys.DatabaseRefreshInterval, 10, SettingsScope.User);
+        private static UserSetting<string> _database = new UserSetting<string>(Instance, Keys.SelectedDatabase, string.Empty, SettingsScope.Project);
+        private static UserSetting<int> _databaseRefreshInterval = new UserSetting<int>(Instance, Keys.DatabaseRefreshInterval, 10, SettingsScope.User);
         
         [UserSettingBlock("General")]
         private static void GeneralGUI(string searchContext)
