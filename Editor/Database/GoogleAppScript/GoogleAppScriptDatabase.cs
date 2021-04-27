@@ -138,7 +138,11 @@ namespace BorritEditor.Database.GoogleAppScript
             request.SendWebRequest().completed += op =>
             {
                 UnityWebRequest resp = ((UnityWebRequestAsyncOperation) op).webRequest;
+#if UNITY_2020_1_OR_NEWER
                 if (resp.result == UnityWebRequest.Result.ConnectionError)
+#else
+                if (request.isNetworkError || request.isHttpError) 
+#endif
                 {
                     Debug.LogError($"Error communicating with google app script {resp.error}");
                     return;
