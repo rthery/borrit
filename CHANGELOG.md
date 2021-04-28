@@ -4,6 +4,29 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2020-04-28
+
+Out of preview! Borrit is ready to be used in production with Google Sheets via Google Script Web App
+
+### Updated
+- Google Script Web App is now the preferred way of using Google Sheets as a database
+- README has now better explanations on how to use Google Sheets as a database
+
+### Added 
+- Borrow and Return actions have keyboard shortcuts (Alt + Shift + B and Alt + Shift + R respectively)
+- Add a Refresh entry in the context menu
+- Add progress dialog when borrowing and returning
+- Add progress of database refresh in the Background Tasks window (Unity 2020.1+)
+- Username is by default the same as the one used in Git (if possible)
+
+### Fixed
+- Improved update of the Project window when assets have been updated
+- Disable Borrow and Return when no username has been input
+- Username can now support characters from UTF8
+- Requests issued before the database has been reset are ignored
+- Fix memory leak caused by UnityWebRequest not being disposed
+- Borrow and Return actions are not blocked anymore when there's a refresh in the background
+
 ## [0.1.1-preview.1] - 2020-04-27
 
 ### Added
