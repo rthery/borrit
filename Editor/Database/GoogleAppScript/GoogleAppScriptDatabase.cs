@@ -88,6 +88,9 @@ namespace BorritEditor.Database.GoogleAppScript
 
         private void OnGetDataResponse(string responseRaw)
         {
+            if (!IsInitialized)
+                return;
+            
             GetResponseData response = new GetResponseData();
             response.Deserialize(responseRaw);
             _refreshing = false;
@@ -105,6 +108,9 @@ namespace BorritEditor.Database.GoogleAppScript
 
         private void OnUpdateResponse(string responseRaw)
         {
+            if (!IsInitialized)
+                return;
+            
             ResponseData response = new ResponseData();
             response.Deserialize(responseRaw);
             _refreshing = false;
