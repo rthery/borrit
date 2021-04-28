@@ -143,11 +143,19 @@ namespace BorritEditor.Database.GoogleAppScript
                 yield break;
             }
             
+            int progressId = 0;
             bool isGetOperation = data.Operation == "get";
             if (isGetOperation)
             {
                 if (_currentGetOperationWebRequest != null)
                     yield break; // Another get operation is already in progress
+                
+#if UNITY_2020_1_OR_NEWER
+                if (BorritSettings.Instance.Get<bool>(BorritSettings.Keys.DatabaseRefreshBackgroundProgress, SettingsScope.User))
+                {
+                    progressId = Progress.Start("Refreshing Borrit Database", null, Progress.Options.Managed);
+                }
+#endif
             }
             else
             {
@@ -186,9 +194,16 @@ namespace BorritEditor.Database.GoogleAppScript
             request.Dispose();
             
             if (isGetOperation)
+            {
                 _currentGetOperationWebRequest = null;
+#if UNITY_2020_1_OR_NEWER
+                Progress.Remove(progressId);
+#endif
+            }
             else
+            {
                 EditorUtility.ClearProgressBar();
+            }
         }
 
         private void AbortGetOperationWebRequest()

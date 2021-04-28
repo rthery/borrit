@@ -95,6 +95,7 @@ namespace BorritEditor
 
         private static UserSetting<string> _database = new UserSetting<string>(Instance, Keys.SelectedDatabase, string.Empty, SettingsScope.Project);
         private static UserSetting<int> _databaseRefreshInterval = new UserSetting<int>(Instance, Keys.DatabaseRefreshInterval, 10, SettingsScope.User);
+        private static UserSetting<bool> _databaseRefreshBackgroundProgress = new UserSetting<bool>(Instance, Keys.DatabaseRefreshBackgroundProgress, true, SettingsScope.User);
         
         [UserSettingBlock("General")]
         private static void GeneralGUI(string searchContext)
@@ -123,6 +124,11 @@ namespace BorritEditor
             if (_databaseRefreshInterval.value < 0)
                 _databaseRefreshInterval.value = 0;
             
+#if UNITY_2020_1_OR_NEWER
+            tooltip = "Track in the Background Tasks window database refresh requests";
+            _databaseRefreshBackgroundProgress.value = SettingsGUILayout.SettingsToggle(new GUIContent("Database Refresh Background Progress", tooltip), _databaseRefreshBackgroundProgress, searchContext);
+#endif
+            
             GUILayout.Space(16);
 
             // Display settings of the selected database
@@ -140,6 +146,7 @@ namespace BorritEditor
             public const string Username = "Username";
             public const string SelectedDatabase = "SelectedDatabase";
             public const string DatabaseRefreshInterval = "DatabaseRefreshInterval";
+            public const string DatabaseRefreshBackgroundProgress = "DatabaseRefreshBackgroundProgress";
         }
     }
 }
