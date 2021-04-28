@@ -164,6 +164,7 @@ namespace BorritEditor.Database.GoogleAppScript
                     return;
                 }
                 response(resp.downloadHandler.text);
+                resp.Dispose();
             };
         }
     }
