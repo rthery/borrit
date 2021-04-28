@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using Unity.EditorCoroutines.Editor;
 
 namespace BorritEditor.Database.GoogleAppScript
 {
@@ -14,7 +16,6 @@ namespace BorritEditor.Database.GoogleAppScript
         public event EventHandler OnUpdated;
         
         private InternalDataBase _data = new InternalDataBase();
-        private bool _refreshing = false;
 
         public void Initialize(string borrowerName, string projectName)
         {
@@ -28,7 +29,6 @@ namespace BorritEditor.Database.GoogleAppScript
             if (!IsInitialized)
                 return;
 
-            _refreshing = false;
             Settings = null;
             IsInitialized = false;
             _data.Clear();
@@ -39,9 +39,9 @@ namespace BorritEditor.Database.GoogleAppScript
             if (!IsInitialized)
                 return;
 
-            if (_refreshing || _data.Dirty)
+            if (_data.Dirty)
             {
-                Debug.LogError("There is a pending petition in progress");
+                Debug.LogError("[Borrit] Failed to borrow! Another request is in progress. Wait for it to end and try again.");
                 return;
             }
             
@@ -57,7 +57,8 @@ namespace BorritEditor.Database.GoogleAppScript
                 });
             }
             _data.Borrow(newEntries);
-            SendWebRequest(new BorrowRequestData{BorrowedEntries = newEntries}, OnUpdateResponse);
+            
+            EditorCoroutineUtility.StartCoroutineOwnerless(SendWebRequestCoroutine(new BorrowRequestData{BorrowedEntries = newEntries}, OnUpdateResponse));
         }
 
         public void ReturnAssets(string[] guids)
@@ -65,16 +66,16 @@ namespace BorritEditor.Database.GoogleAppScript
             if (!IsInitialized)
                 return;
 
-            if (_refreshing || _data.Dirty)
+            if (_data.Dirty)
             {
-                Debug.LogError("There is a pending petition in progress");
+                Debug.LogError("[Borrit] Failed to return! Another request is in progress. Wait for it to end and try again.");
                 return;
             }
             
             ReturnRequestData requestData = new ReturnRequestData();
             requestData.ReturnedGuids.AddRange(guids);
             _data.Return(requestData.ReturnedGuids);
-            SendWebRequest(requestData, OnUpdateResponse);
+            EditorCoroutineUtility.StartCoroutineOwnerless(SendWebRequestCoroutine(requestData, OnUpdateResponse));
         }
 
         public void Refresh()
@@ -82,8 +83,7 @@ namespace BorritEditor.Database.GoogleAppScript
             if (!IsInitialized)
                 return;
             
-            _refreshing = true;
-            SendWebRequest(new RequestData(), OnGetDataResponse);
+            EditorCoroutineUtility.StartCoroutineOwnerless(SendWebRequestCoroutine(new RequestData(), OnGetDataResponse));
         }
 
         private void OnGetDataResponse(string responseRaw)
@@ -93,7 +93,6 @@ namespace BorritEditor.Database.GoogleAppScript
             
             GetResponseData response = new GetResponseData();
             response.Deserialize(responseRaw);
-            _refreshing = false;
             if (!response.Success)
             {
                 Debug.LogError(response.Error);
@@ -113,7 +112,6 @@ namespace BorritEditor.Database.GoogleAppScript
             
             ResponseData response = new ResponseData();
             response.Deserialize(responseRaw);
-            _refreshing = false;
             if (!response.Success)
             {
                 Debug.LogError(response.Error);
@@ -135,15 +133,22 @@ namespace BorritEditor.Database.GoogleAppScript
             return _data.TryGetRow(guid, out DatabaseRow row);
         }
 
-        private void SendWebRequest(RequestData data, Action<string> response)
+        private UnityWebRequest _currentGetOperationWebRequest;
+        private IEnumerator SendWebRequestCoroutine(RequestData data, Action<string> response)
         {
             string url = BorritSettings.Instance.Get<string>(GoogleAppScriptSettings.Keys.ScriptUrl);
             if (string.IsNullOrEmpty(url))
             {
-                return;
+                yield break;
             }
             
-            var request = new UnityWebRequest(url);
+            bool isGetOperation = data.Operation == "get";
+            if (isGetOperation == false)
+                AbortGetOperationWebRequest();
+            else if (_currentGetOperationWebRequest != null)
+                yield break;
+            
+            UnityWebRequest request = new UnityWebRequest(url);
             request.method = UnityWebRequest.kHttpVerbPOST;
             request.useHttpContinue = false;
             request.redirectLimit = 10;
@@ -151,21 +156,39 @@ namespace BorritEditor.Database.GoogleAppScript
             request.downloadHandler = new DownloadHandlerBuffer();
             request.uploadHandler = new UploadHandlerRaw(data.Serialize());
             request.SetRequestHeader("Content-Type", "application/json");
-            request.SendWebRequest().completed += op =>
-            {
-                UnityWebRequest resp = ((UnityWebRequestAsyncOperation) op).webRequest;
+            if (isGetOperation)
+                _currentGetOperationWebRequest = request;
+            yield return request.SendWebRequest();
+            
 #if UNITY_2020_1_OR_NEWER
-                if (resp.result == UnityWebRequest.Result.ConnectionError)
+            if (request.result == UnityWebRequest.Result.ConnectionError)
 #else
-                if (request.isNetworkError || request.isHttpError) 
+            if (request.isNetworkError || request.isHttpError)
 #endif
+            {
+                if (request.error != "Request aborted")
                 {
-                    Debug.LogError($"Error communicating with google app script {resp.error}");
-                    return;
+                    Debug.LogError($"[Borrit] Error communicating with Google App Script: {request.error}");
                 }
-                response(resp.downloadHandler.text);
-                resp.Dispose();
-            };
+            }
+            else
+            {
+                response(request.downloadHandler.text);
+            }
+
+            request.Dispose();
+            
+            if (isGetOperation)
+                _currentGetOperationWebRequest = null;
+        }
+
+        private void AbortGetOperationWebRequest()
+        {
+            if (_currentGetOperationWebRequest != null)
+            {
+                _currentGetOperationWebRequest.Abort();
+                _currentGetOperationWebRequest = null;
+            }
         }
     }
 }
