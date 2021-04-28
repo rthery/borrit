@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using Unity.EditorCoroutines.Editor;
+using UnityEditor;
 
 namespace BorritEditor.Database.GoogleAppScript
 {
@@ -143,10 +144,16 @@ namespace BorritEditor.Database.GoogleAppScript
             }
             
             bool isGetOperation = data.Operation == "get";
-            if (isGetOperation == false)
+            if (isGetOperation)
+            {
+                if (_currentGetOperationWebRequest != null)
+                    yield break; // Another get operation is already in progress
+            }
+            else
+            {
                 AbortGetOperationWebRequest();
-            else if (_currentGetOperationWebRequest != null)
-                yield break;
+                EditorUtility.DisplayProgressBar("Please Wait", $"Validating {data.Operation} operation...", 1f);
+            }
             
             UnityWebRequest request = new UnityWebRequest(url);
             request.method = UnityWebRequest.kHttpVerbPOST;
@@ -180,6 +187,8 @@ namespace BorritEditor.Database.GoogleAppScript
             
             if (isGetOperation)
                 _currentGetOperationWebRequest = null;
+            else
+                EditorUtility.ClearProgressBar();
         }
 
         private void AbortGetOperationWebRequest()
