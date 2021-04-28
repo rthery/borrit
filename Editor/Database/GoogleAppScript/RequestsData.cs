@@ -8,7 +8,7 @@ namespace BorritEditor.Database
     public class RequestData 
     {
         public string Operation = "get";
-        public byte[] Serialize() => System.Text.Encoding.ASCII.GetBytes(JsonUtility.ToJson(this));
+        public byte[] Serialize() => System.Text.Encoding.UTF8.GetBytes(JsonUtility.ToJson(this));
     }
 
     [Serializable]
