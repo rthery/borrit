@@ -41,6 +41,7 @@ namespace BorritEditor
         {
             Reset();
             
+            BorritSettings.InitDefaultValues();
             string selectedDatabase = BorritSettings.Instance.Get<string>(BorritSettings.Keys.SelectedDatabase);
             if (string.IsNullOrEmpty(selectedDatabase) == false)
             {

@@ -36,7 +36,7 @@ namespace BorritEditor
                 _databaseTypesByName.Add(ObjectNames.NicifyVariableName(databaseType.Name.Replace("Database", string.Empty)), databaseType);
             }
 
-            SetDefaultValues();
+            InitDefaultValues();
 
             UserSettingsProvider provider = new UserSettingsProvider("Project/Borrit",
                 Instance,
@@ -46,7 +46,7 @@ namespace BorritEditor
             return provider;
         }
 
-        private static void SetDefaultValues()
+        internal static void InitDefaultValues()
         {
             if (_userName.value == string.Empty)
             {
