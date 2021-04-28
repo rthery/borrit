@@ -14,6 +14,21 @@ namespace BorritEditor
         private const string AssetsGuid = "00000000000000001000000000000000";
         
         private static IDatabase _database;
+        
+        private static bool IsInitialized
+        {
+            get
+            {
+                if (_database == null || _database.IsInitialized == false)
+                    return false;
+
+                string username = BorritSettings.Instance.Get<string>(BorritSettings.Keys.Username, SettingsScope.User);
+                if (string.IsNullOrEmpty(username))
+                    return false;
+
+                return true;
+            }
+        }
 
         public static IDatabase Database => _database;
 
@@ -99,7 +114,7 @@ namespace BorritEditor
         [MenuItem("Assets/Borrit/Borrow #&b", true)]
         private static bool BorrowAssetValidate()
         {
-            if (_database == null)
+            if (IsInitialized == false)
                 return false;
 
             if (Selection.assetGUIDs.Length == 0)
@@ -143,7 +158,7 @@ namespace BorritEditor
         [MenuItem("Assets/Borrit/Return #&r", true)]
         private static bool ReturnAssetValidate()
         {
-            if (_database == null)
+            if (IsInitialized == false)
                 return false;
             
             string username = BorritSettings.Instance.Get<string>(BorritSettings.Keys.Username, SettingsScope.User);
