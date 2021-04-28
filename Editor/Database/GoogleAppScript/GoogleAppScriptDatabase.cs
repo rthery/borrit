@@ -197,7 +197,8 @@ namespace BorritEditor.Database.GoogleAppScript
             {
                 _currentGetOperationWebRequest = null;
 #if UNITY_2020_1_OR_NEWER
-                Progress.Remove(progressId);
+                if (progressId != 0)
+                    Progress.Remove(progressId);
 #endif
             }
             else
