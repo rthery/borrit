@@ -149,7 +149,7 @@ namespace BorritEditor
             return true;
         }
         
-        [MenuItem("Assets/Borrit/Return #&r", priority = 1984)]
+        [MenuItem("Assets/Borrit/Return #&r", priority = 1985)]
         private static void ReturnAsset()
         {
             _database.ReturnAssets(Selection.assetGUIDs);
@@ -170,6 +170,18 @@ namespace BorritEditor
             }
 
             return false;
+        }
+        
+        [MenuItem("Assets/Borrit/Refresh", priority = 1996)]
+        private static void RefreshAssets()
+        {
+            _database.Refresh();
+        }
+
+        [MenuItem("Assets/Borrit/Refresh", true)]
+        private static bool RefreshAssetsValidate()
+        {
+            return IsInitialized;
         }
 
         private static void OnProjectWindowItemOnGUI(string guid, Rect selectionRect)
