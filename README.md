@@ -14,7 +14,9 @@ databases to store the state of the borrowed assets.
 > :warning: **This is a Proof of Concept with support for Google Sheets only.**
 
 ## Installation
-Use the package manager in Unity to install this package from its git url `https://github.com/rthery/borrit.git`
+Use the package manager in Unity to install this package from its git url `https://github.com/rthery/borrit.git`  
+
+It has been tested in Unity 2019.4 and 2020.3, it may work with earlier versions though.
 
 ### Google Sheets (Google Script Web App)
 This is the preferred method to use Google Sheets as a database, as its project setup is much easier 
