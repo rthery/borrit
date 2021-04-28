@@ -138,6 +138,11 @@ namespace BorritEditor.Database.GoogleAppScript
         private void SendWebRequest(RequestData data, Action<string> response)
         {
             string url = BorritSettings.Instance.Get<string>(GoogleAppScriptSettings.Keys.ScriptUrl);
+            if (string.IsNullOrEmpty(url))
+            {
+                return;
+            }
+            
             var request = new UnityWebRequest(url);
             request.method = UnityWebRequest.kHttpVerbPOST;
             request.useHttpContinue = false;
