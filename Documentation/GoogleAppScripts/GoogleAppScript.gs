@@ -1,4 +1,4 @@
-const spreadsheetId = "#Your spreadsheet id goes here#";
+const spreadsheetId = SpreadsheetApp.getActiveSpreadsheet().getId();
 
 function doPost(request) 
 {
