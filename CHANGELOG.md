@@ -4,7 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2020-04-28
+## [1.0.1] - 2021-05-05
+
+### Fixed
+- All Google Script app URL should now be valid
+
+## [1.0.0] - 2021-04-28
 
 Out of preview! Borrit is ready to be used in production with Google Sheets via Google Script Web App
 
@@ -27,12 +32,12 @@ Out of preview! Borrit is ready to be used in production with Google Sheets via 
 - Fix memory leak caused by UnityWebRequest not being disposed
 - Borrow and Return actions are not blocked anymore when there's a refresh in the background
 
-## [0.1.1-preview.1] - 2020-04-27
+## [0.1.1-preview.1] - 2021-04-27
 
 ### Added
 - Support for Google Sheets App Scripts Web App, greatly simplifying connection process
 
-## [0.1.0-preview.1] - 2020-01-11
+## [0.1.0-preview.1] - 2021-01-11
 
 ### This is the first release of Borrit.
 
