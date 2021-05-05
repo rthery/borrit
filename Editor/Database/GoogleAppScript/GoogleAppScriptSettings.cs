@@ -20,7 +20,7 @@ namespace BorritEditor.Database.GoogleAppScript
             {
                 if (string.IsNullOrEmpty(_url.value) == false)
                 {
-                    if (_url.value.ToLowerInvariant().StartsWith("https://script.google.com/macros/") == false)
+                    if (_url.value.ToLowerInvariant().StartsWith("https://script.google.com/") == false)
                     {
                         _url.value = null;
                         EditorUtility.DisplayDialog("Error", "Please paste a valid URL to the Google App Script web app", "Ok");
