@@ -34,6 +34,9 @@ namespace BorritEditor
 
         static Borrit()
         {
+            if (Application.isBatchMode)
+                return; // No point to use Borrit in batch mode!
+            
             Initialize();
         }
 
