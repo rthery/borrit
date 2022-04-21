@@ -28,7 +28,19 @@ namespace BorritEditor.Database
     [Serializable]
     public class ResponseData
     {
-        public void Deserialize(string data) => JsonUtility.FromJsonOverwrite(data, this);  
+        public void Deserialize(string data)
+        {
+            try
+            {
+                JsonUtility.FromJsonOverwrite(data, this);
+            }
+            catch (Exception e)
+            {
+                Success = false;
+                Error = e.Message;
+            }
+        }
+
         public bool Success = true;
         public string Error = "";
     }
