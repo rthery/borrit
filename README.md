@@ -6,12 +6,10 @@ Working as a team on a Unity project can be troublesome because of potential dif
 to resolve conflicts on some assets. This tool offers a simple way to borrow/return 
 assets from the Project window directly.
 
-It's currently independent from any version control system and try to support different
+It's currently independent from any version control system and can support different
 databases to store the state of the borrowed assets.
 
 ![Project window with Borrit](Documentation/images/example.png)
-
-> :warning: **This is a Proof of Concept with support for Google Sheets only.**
 
 ## Installation
 Use the package manager in Unity to install this package from its git url `https://github.com/rthery/borrit.git`  
@@ -45,7 +43,7 @@ the following:
 
 ### Google Sheets (Google API)
 This method can be interesting if you want all your users to be authenticated with their Google account.
-It makes it very cumbersome to set up for all your devs though.
+It's very cumbersome to set up for all your devs though.
 
 #### Project Setup
 1. Go to Google Drive and create a Spreadsheet with at least one sheet sheet in it with the name of your project
@@ -78,8 +76,8 @@ of your assets.
 For the username, Borrit will by default use `git config user.name` if it's available
 
 ### Project
-In the Project window, you can right click any assets or folder and select Borrit > Borrow.
+In the Project window, you can right click any asset or folder and select Borrit > Borrow.
 This will mark the asset (or the folder and all its content) as borrowed by you. You can do the same
 and select Return when you are done and the modified assets pushed to you remote repository.  
-The state of assets if they borrowed or not are pulled in the interval specified in the settings.
+The state of assets if they are borrowed or not are pulled in the interval specified in the settings.
 You also have the option to Refresh manually via that context menu.
