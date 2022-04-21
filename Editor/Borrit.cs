@@ -51,7 +51,17 @@ namespace BorritEditor
                 selectedDatabase = selectedDatabase.Replace(" ", string.Empty);
                 string databaseClassFullName = $"BorritEditor.Database.{selectedDatabase}.{selectedDatabase}Database";
                 Type t = Type.GetType(databaseClassFullName);
+                if (t == null)
+                {
+                    Debug.LogError($"[Borrit] Failed to initialize, could not find {databaseClassFullName}");
+                    return;
+                }
                 _database = Activator.CreateInstance(t) as IDatabase;
+                if (_database == null)
+                {
+                    Debug.LogError($"[Borrit] Failed to initialize, could not instantiate {databaseClassFullName}");
+                    return;
+                }
                 _database.OnInitialized += OnDatabaseInitialized;
                 
                 string username = BorritSettings.Instance.Get<string>(BorritSettings.Keys.Username, SettingsScope.User);
