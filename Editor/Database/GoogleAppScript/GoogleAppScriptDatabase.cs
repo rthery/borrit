@@ -8,7 +8,7 @@ using UnityEditor;
 
 namespace BorritEditor.Database.GoogleAppScript
 {
-    public class GoogleAppScriptDatabase: IDatabase
+    public class GoogleAppScriptDatabase : IDatabase
     {
         public bool IsInitialized { get; private set; }
         public IDatabaseSettings Settings { get; private set; }
@@ -135,6 +135,7 @@ namespace BorritEditor.Database.GoogleAppScript
         }
 
         private UnityWebRequest _currentGetOperationWebRequest;
+        private int _progressId = -1;
         private IEnumerator SendWebRequestCoroutine(RequestData data, Action<string> response)
         {
             string url = BorritSettings.Instance.Get<string>(GoogleAppScriptSettings.Keys.ScriptUrl);
@@ -143,7 +144,6 @@ namespace BorritEditor.Database.GoogleAppScript
                 yield break;
             }
             
-            int progressId = 0;
             bool isGetOperation = data.Operation == "get";
             if (isGetOperation)
             {
@@ -153,7 +153,9 @@ namespace BorritEditor.Database.GoogleAppScript
 #if UNITY_2020_1_OR_NEWER
                 if (BorritSettings.Instance.Get<bool>(BorritSettings.Keys.DatabaseRefreshBackgroundProgress, SettingsScope.User))
                 {
-                    progressId = Progress.Start("Refreshing Borrit Database", null, Progress.Options.Managed);
+                    if (Progress.Exists(_progressId))
+                        Progress.Remove(_progressId);
+                    _progressId = Progress.Start("Refreshing Borrit Database", null, Progress.Options.Managed);
                 }
 #endif
             }
@@ -175,13 +177,17 @@ namespace BorritEditor.Database.GoogleAppScript
                 _currentGetOperationWebRequest = request;
             yield return request.SendWebRequest();
             
+            bool hasError = false;
 #if UNITY_2020_1_OR_NEWER
             if (request.result == UnityWebRequest.Result.ConnectionError)
 #else
             if (request.isNetworkError || request.isHttpError)
 #endif
             {
-                if (request.error != "Request aborted")
+                hasError = true;
+                bool isAborted = request.error == "Request aborted";
+                bool hasLostConnection = request.error == "Cannot connect to destination host" || request.error == "Cannot resolve destination host";
+                if (isAborted == false && hasLostConnection == false)
                 {
                     Debug.LogError($"[Borrit] Error communicating with Google App Script: {request.error}");
                 }
@@ -197,8 +203,17 @@ namespace BorritEditor.Database.GoogleAppScript
             {
                 _currentGetOperationWebRequest = null;
 #if UNITY_2020_1_OR_NEWER
-                if (progressId != 0)
-                    Progress.Remove(progressId);
+                if (Progress.Exists(_progressId))
+                {
+                    if (hasError)
+                    {
+                        Progress.Finish(_progressId, Progress.Status.Failed);
+                    }
+                    else
+                    {
+                        Progress.Remove(_progressId);
+                    }
+                }
 #endif
             }
             else
