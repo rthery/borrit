@@ -177,14 +177,12 @@ namespace BorritEditor.Database.GoogleAppScript
                 _currentGetOperationWebRequest = request;
             yield return request.SendWebRequest();
             
-            bool hasError = false;
 #if UNITY_2020_1_OR_NEWER
             if (request.result == UnityWebRequest.Result.ConnectionError)
 #else
             if (request.isNetworkError || request.isHttpError)
 #endif
             {
-                hasError = true;
                 bool isAborted = request.error == "Request aborted";
                 bool hasLostConnection = request.error == "Cannot connect to destination host" || request.error == "Cannot resolve destination host";
                 if (isAborted == false && hasLostConnection == false)
@@ -196,8 +194,6 @@ namespace BorritEditor.Database.GoogleAppScript
             {
                 response(request.downloadHandler.text);
             }
-
-            request.Dispose();
             
             if (isGetOperation)
             {
@@ -205,8 +201,9 @@ namespace BorritEditor.Database.GoogleAppScript
 #if UNITY_2020_1_OR_NEWER
                 if (Progress.Exists(_progressId))
                 {
-                    if (hasError)
+                    if (string.IsNullOrEmpty(request.error) == false)
                     {
+                        Progress.Report(_progressId, 1f, request.error);
                         Progress.Finish(_progressId, Progress.Status.Failed);
                     }
                     else
@@ -220,6 +217,8 @@ namespace BorritEditor.Database.GoogleAppScript
             {
                 EditorUtility.ClearProgressBar();
             }
+            
+            request.Dispose();
         }
 
         private void AbortGetOperationWebRequest()
