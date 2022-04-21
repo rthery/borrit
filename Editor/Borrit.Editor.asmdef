@@ -1,5 +1,6 @@
 {
     "name": "Borrit.Editor",
+    "rootNamespace": "BorritEditor",
     "references": [
         "GUID:478a2357cc57436488a56e564b08d223",
         "GUID:49818357e697641afb75d2f8acaf1861"
