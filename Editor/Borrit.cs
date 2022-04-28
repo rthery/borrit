@@ -14,6 +14,7 @@ namespace BorritEditor
         private const string AssetsGuid = "00000000000000001000000000000000";
         
         private static IDatabase _database;
+        private static EditorCoroutine _updateCoroutine;
         
         private static bool IsInitialized
         {
@@ -78,6 +79,14 @@ namespace BorritEditor
                 _database.Reset();
                 _database = null;
             }
+            
+            EditorApplication.projectWindowItemOnGUI -= OnProjectWindowItemOnGUI;
+            
+            if (_updateCoroutine != null)
+            {
+                EditorCoroutineUtility.StopCoroutine(_updateCoroutine);
+                _updateCoroutine = null;
+            }            
         }
 
         private static void OnDatabaseInitialized(object sender, bool success)
@@ -88,7 +97,7 @@ namespace BorritEditor
                 _database.OnUpdated += OnDatabaseUpdated;
                 EditorApplication.projectWindowItemOnGUI += OnProjectWindowItemOnGUI;
 
-                EditorCoroutineUtility.StartCoroutineOwnerless(RefreshDatabaseCoroutine());
+                _updateCoroutine = EditorCoroutineUtility.StartCoroutineOwnerless(RefreshDatabaseCoroutine());
             }
         }
 
