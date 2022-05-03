@@ -1,7 +1,7 @@
 {
   "name": "io.github.borrit",
   "displayName": "Borrit",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "unity": "2019.4",
   "description": "Soft lock system for assets in Unity",
   "author": {

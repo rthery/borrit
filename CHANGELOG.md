@@ -4,6 +4,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2022-05-03
+
+### Removed
+- Remove GoogleSheets database using the Google API, you can install it via a separate package found [here](https://github.com/rthery/borrit-gsheet)
+
+### Fixed
+- Improve handling RefreshDatabaseCoroutine lifetime
+- Display error message in Background Tasks window
+- Stop spamming errors when disconnected, keep the progress as failed instead in the Background Tasks window
+- Improve error handling during initialization
+- Handle exception when receiving invalid response data from GoogleAppScript
+- Disable Borrit when editor is running in batch mode
+
 ## [1.0.1] - 2021-05-05
 
 ### Fixed
