@@ -2,7 +2,7 @@
 
 namespace BorritEditor.Database
 {
-    public readonly partial struct DatabaseRow : IEquatable<DatabaseRow>
+    public readonly struct DatabaseRow : IEquatable<DatabaseRow>
     {
         public static readonly DatabaseRow Empty = new DatabaseRow(string.Empty, string.Empty, 0);
         
