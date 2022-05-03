@@ -97,3 +97,9 @@ function buildResponse(obj, lock)
   lock.releaseLock();
   return ContentService.createTextOutput(JSON.stringify(obj));
 }
+
+// Run this method if you modify the spreadsheet data manually
+function syncCacheWithSheet()
+{
+  updateCache(loadRows());
+}
