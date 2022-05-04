@@ -5,6 +5,8 @@ using BorritEditor.Database;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace BorritEditor
 {
@@ -81,6 +83,7 @@ namespace BorritEditor
             }
             
             EditorApplication.projectWindowItemOnGUI -= OnProjectWindowItemOnGUI;
+            EditorApplication.hierarchyWindowItemOnGUI -= OnHierarchyWindowItemOnGUI;
             
             if (_updateCoroutine != null)
             {
@@ -96,6 +99,7 @@ namespace BorritEditor
                 _database.OnInitialized -= OnDatabaseInitialized;
                 _database.OnUpdated += OnDatabaseUpdated;
                 EditorApplication.projectWindowItemOnGUI += OnProjectWindowItemOnGUI;
+                EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyWindowItemOnGUI;
 
                 _updateCoroutine = EditorCoroutineUtility.StartCoroutineOwnerless(RefreshDatabaseCoroutine());
             }
@@ -245,6 +249,40 @@ namespace BorritEditor
                     assetParentDirectory = Directory.GetParent(assetParentPath);
                 }
             }
+        }
+        
+        private static void OnHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
+        {
+            if (_database == null)
+                return;
+
+            GUID guid = new GUID();
+            Object obj = EditorUtility.InstanceIDToObject(instanceID);
+            if (obj == null) // Usually happens when it's the scene entry in the hierarchy
+            {
+                guid = GetSceneGUIDFromHandle(instanceID);
+            }
+            else if (PrefabUtility.IsAnyPrefabInstanceRoot(obj as GameObject))
+            {
+                string prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(obj);
+                guid = AssetDatabase.GUIDFromAssetPath(prefabPath);
+            }
+            
+            if (guid.Empty() == false)
+                OnProjectWindowItemOnGUI(guid.ToString(), selectionRect);
+        }
+
+        // ReSharper disable once InconsistentNaming
+        private static GUID GetSceneGUIDFromHandle(int handle)
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                Scene scene = SceneManager.GetSceneAt(i);
+                if (scene.handle == handle)
+                    return AssetDatabase.GUIDFromAssetPath(scene.path);
+            }
+
+            return new GUID();
         }
 
         private static void DrawBorrowedIcon(Rect selectionRect, string guid, bool isBorrowedIndirectly = false)
