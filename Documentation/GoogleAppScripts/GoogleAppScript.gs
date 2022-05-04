@@ -12,10 +12,13 @@ function doPost(request)
     let data = cache.get("borrit");
     if (data == null) 
     {
-      data = JSON.stringify(loadRows());
+      data = loadRows();
       updateCache(data);
     }
-    data = JSON.parse(data);
+    else 
+    {
+      data = JSON.parse(data);
+    }
     return buildResponse({Success: true, Error: "", BorrowedEntries: data }, lock);
   }
   if(command.Operation == "borrow")
@@ -102,4 +105,10 @@ function buildResponse(obj, lock)
 function syncCacheWithSheet()
 {
   updateCache(loadRows());
+}
+
+function clearCache()
+{
+  let cache = CacheService.getScriptCache();
+  cache.remove("borrit");
 }
