@@ -4,10 +4,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2022-05-05
+
+### Added
+- Add an editor window to manage borrowed assets, it can be found under Window > Borrit > Borrowed Assets
+- In the hierarchy window, indicate on scenes and instances of prefabs if they have been borrowed
+
+### Fixed
+- Stop refreshing borrowed assets when editor is out of focus
+- Fix Refresh not properly updating anything using GoogleAppScriptDatabase. Please update the GoogleAppScript.gs in your gsheet and redeploy it!
+
 ## [2.0.0] - 2022-05-03
 
 ### Removed
-- Remove GoogleSheets database using the Google API, you can install it via a separate package found [here](https://github.com/rthery/borrit-gsheet)
+- **[BREAKING]** Remove GoogleSheets database using the Google API, you can install it via a separate package found [here](https://github.com/rthery/borrit-gsheet)
 
 ### Fixed
 - Improve handling RefreshDatabaseCoroutine lifetime
