@@ -4,6 +4,7 @@ using System.IO;
 using BorritEditor.Database;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -116,6 +117,11 @@ namespace BorritEditor
         {
             while (true)
             {
+                if (InternalEditorUtility.isApplicationActive == false)
+                {
+                    yield return null;
+                }
+                
                 try
                 {
                     _database.Refresh();
