@@ -17,6 +17,7 @@ namespace BorritEditor.Database
         private List<EntryDTO> _pendingBorrow = new List<EntryDTO>();
         private List<string> _pendingReturn = new List<string>();
 
+        public IReadOnlyList<DatabaseRow> Rows => _data;
         public bool Dirty => _pendingBorrow.Count > 0 || _pendingReturn.Count > 0;
 
         public void Clear()

@@ -129,6 +129,11 @@ namespace BorritEditor.Database.GoogleAppScript
             return _data.TryGetRow(guid, out DatabaseRow row) ? row : DatabaseRow.Empty;
         }
 
+        public IReadOnlyList<DatabaseRow> GetBorrowedAssetsData()
+        {
+            return _data.Rows;
+        }
+
         public bool IsAssetBorrowed(string guid)
         {
             return _data.TryGetRow(guid, out DatabaseRow row);

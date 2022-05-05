@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BorritEditor.Database
 {
@@ -17,6 +18,7 @@ namespace BorritEditor.Database
 		void ReturnAssets(string[] guids);
 		void Refresh();
 		DatabaseRow GetBorrowedAssetData(string guid);
+		IReadOnlyList<DatabaseRow> GetBorrowedAssetsData();
 		bool IsAssetBorrowed(string guid);
 	}
 }
