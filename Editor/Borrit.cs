@@ -19,7 +19,7 @@ namespace BorritEditor
         private static IDatabase _database;
         private static EditorCoroutine _updateCoroutine;
         
-        private static bool IsInitialized
+        public static bool IsInitialized
         {
             get
             {
