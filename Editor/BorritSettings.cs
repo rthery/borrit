@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using BorritEditor.Database;
-using BorritEditor.Database.GoogleAppScript;
+using BorritEditor.Database.GitRef;
 using UnityEditor;
 using UnityEditor.SettingsManagement;
 using UnityEngine;
@@ -84,7 +84,7 @@ namespace BorritEditor
             
             if (_database.value == string.Empty)
             {
-                _database.value = ObjectNames.NicifyVariableName(nameof(GoogleAppScriptDatabase).Replace("Database", string.Empty));
+                _database.value = ObjectNames.NicifyVariableName(nameof(GitRefDatabase).Replace("Database", string.Empty));
             }
             
             _settings.Save();
