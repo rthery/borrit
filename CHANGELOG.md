@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-09-23
+
+### Added
+- Add Git Ref database, storing borrowed assets in a dedicated ref of your git repository (`refs/borrit/locks` by default) with no external service required
+- Git Ref is now the default database for new projects, existing projects keep their selected database
+
 ## [2.1.0] - 2022-05-05
 
 ### Added
