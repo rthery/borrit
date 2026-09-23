@@ -6,8 +6,8 @@ Working as a team on a Unity project can be troublesome because of potential dif
 to resolve conflicts on some assets. This tool offers a simple way to borrow/return 
 assets from the Project window directly.
 
-It's currently independent from any version control system and can support different
-databases to store the state of the borrowed assets.
+By default, it stores the state of the borrowed assets in your git repository. It can also
+support different databases, such as Google Sheets, if you don't use git.
 
 ![Project window with Borrit](Documentation/images/example.png)
 
@@ -15,6 +15,28 @@ databases to store the state of the borrowed assets.
 Use the package manager in Unity to install this package from its git url `https://github.com/rthery/borrit.git`  
 
 It has been tested in Unity 2019.4 and 2020.3, it may work with earlier versions though.
+
+### Git (default)
+Borrit stores the borrowed assets in a dedicated ref of your git repository (`refs/borrit/locks` by default).
+It's not a branch and it doesn't appear in your history.
+There is no server to set up: anyone who can push to the repository can borrow and return assets.
+
+#### Requirements
+- Git 2.29 or newer, installed and available in the PATH of the Unity Editor  
+- The Unity project is inside a git repository with a remote (`origin` by default)  
+- Git can reach the remote without prompting for credentials (SSH agent or credential helper), as Borrit runs git in the background  
+
+#### Project Setup
+1. In Unity, Open Borrit settings, Edit > Project Settings > Borrit  
+1. Select 'Git Ref' Database (selected by default in new projects)  
+1. Change the Remote and Ref Name if needed, then press Check Setup  
+1. Then push to git the files in `ProjectSettings\Packages\io.github.borrit`  
+
+If something is missing, the reason is displayed in the Borrit settings and logged in the Console.
+
+#### Inspect or clear borrowed assets
+You can look at the borrowed assets with `git fetch origin refs/borrit/locks && git show FETCH_HEAD:locks.json`,
+and return all of them at once with `git push origin --delete refs/borrit/locks`.
 
 ### Google Sheets (Google Script Web App)
 This is the preferred method to use Google Sheets as a database, as its project setup is much easier 
