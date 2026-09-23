@@ -117,7 +117,7 @@ namespace BorritEditor
         {
             while (true)
             {
-                if (InternalEditorUtility.isApplicationActive == false)
+                while (InternalEditorUtility.isApplicationActive == false)
                 {
                     yield return null;
                 }
